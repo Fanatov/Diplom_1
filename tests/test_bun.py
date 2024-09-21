@@ -14,4 +14,3 @@ def test_bun_initialization_name(name, price):
 def test_bun_initialization_price(name, price):
     bun = Bun(name, price)
     assert bun.get_price() == price
-
