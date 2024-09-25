@@ -1,4 +1,8 @@
+from unittest.mock import Mock
+
+import DATA
 from DATA import *
+from praktikum.burger import Burger
 
 
 def test_burger_constructor_bun(burger, mock_bun):
@@ -36,7 +40,22 @@ def test_get_price(burger, mock_bun, mock_ingredient):
     assert actual_price == expected_price
 
 
-def test_get_receipt(burger_complete):
-    receipt = burger_complete.get_receipt()
-    expected_receipt = f'(==== {Buns.WHITE_BUN} ====)\n= sauce {Ingridients.HOT_SAUCE} =\n(==== {Buns.WHITE_BUN} ====)\n\nPrice: {burger_complete.get_price()}'
-    assert receipt == expected_receipt
+def test_get_receipt():
+    mock_bun = Mock()
+    mock_bun.get_name.return_value = DATA.Buns.WHITE_BUN
+    mock_ingredient = Mock()
+    mock_ingredient.get_name.return_value = Ingridients.HOT_SAUCE
+    mock_ingredient.get_type.return_value = INGREDIENT_TYPE_SAUCE
+    mock = Mock()
+    mock.get_price.return_value = DATA.Price.WHITE_BUN_PRICE
+
+    burger = Burger()
+    burger.bun = mock_bun
+    burger.ingredients = [mock_ingredient]
+    burger.get_price = mock.get_price
+
+    assert (burger.get_receipt() == '(==== white bun ====)\n'
+                                    '= sauce hot sauce =\n'
+                                    '(==== white bun ====)\n'
+                                    '\n'
+                                    'Price: 200')
